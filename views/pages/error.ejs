@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('../partials/head') %>
+</head>
+<body>
+  <%- include('../partials/navbar', { user: null }) %>
+  
+  <div class="container mt-5">
+    <div class="alert alert-danger">
+      <h4>Error</h4>
+      <p><%= error %></p>
+      <a href="/dashboard" class="btn btn-primary">Back to Dashboard</a>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('../partials/head') %>
+  <style>
+    :root {
+      --primary-color: #4361ee;
+      --secondary-color: #3f37c9;
+      --accent-color: #4cc9f0;
+      --light-color: #f8f9fa;
+      --dark-color: #212529;
+      --success-color: #4caf50;
+      --danger-color: #f44336;
+      --warning-color: #ff9800;
+      --info-color: #2196f3;
+    }
+    
+    body {
+      background-color: #f5f7fb;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: var(--dark-color);
+    }
+    
+    .navbar {
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    
+    .navbar-brand {
+      font-weight: 700;
+      font-size: 1.5rem;
+    }
+    
+    .card {
+      border: none;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      margin-bottom: 20px;
+      overflow: hidden;
+    }
+    
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+    
+    .card-header {
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      color: white;
+      border-bottom: none;
+      padding: 15px 20px;
+    }
+    
+    .card-header h5 {
+      margin: 0;
+      font-weight: 600;
+    }
+    
+    .profile-img {
+      width: 150px;
+      height: 150px;
+      object-fit: cover;
+      border: 5px solid white;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease;
+    }
+    
+    .profile-img:hover {
+      transform: scale(1.05);
+    }
+    
+    .list-group-item {
+      border: none;
+      border-left: 4px solid transparent;
+      margin-bottom: 5px;
+      border-radius: 5px !important;
+      transition: all 0.3s ease;
+      font-weight: 500;
+    }
+    
+    .list-group-item:hover, .list-group-item:focus {
+      background-color: rgba(67, 97, 238, 0.1);
+      border-left: 4px solid var(--primary-color);
+      color: var(--primary-color);
+    }
+    
+    .table {
+      border-collapse: separate;
+      border-spacing: 0;
+    }
+    
+    .table thead th {
+      background-color: #f8f9fa;
+      border: none;
+      font-weight: 600;
+    }
+    
+    .table tbody tr {
+      transition: background-color 0.2s ease;
+    }
+    
+    .table tbody tr:hover {
+      background-color: rgba(67, 97, 238, 0.05);
+    }
+    
+    .badge-category {
+      background-color: var(--accent-color);
+      color: white;
+      padding: 5px 10px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+    
+    .no-results {
+      text-align: center;
+      padding: 40px;
+      color: #6c757d;
+    }
+    
+    .no-results i {
+      font-size: 3rem;
+      margin-bottom: 15px;
+      color: #dee2e6;
+    }
+    
+    .username {
+      font-weight: 700;
+      color: var(--dark-color);
+      margin-top: 15px;
+    }
+    
+    .interests {
+      background-color: rgba(76, 201, 240, 0.1);
+      padding: 5px 10px;
+      border-radius: 20px;
+      display: inline-block;
+      font-size: 0.9rem;
+    }
+    
+    @media (max-width: 768px) {
+      .profile-img {
+        width: 120px;
+        height: 120px;
+      }
+      
+      .card-header h5 {
+        font-size: 1.2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <%- include('../partials/navbar', { user }) %>
+  
+  <div class="container mt-4">
+    <div class="row">
+      <!-- Left Column -->
+      <div class="col-lg-4">
+        <!-- Profile Card -->
+        <div class="card mb-4">
+          <div class="card-header">
+            <h5><i class="fas fa-user me-2"></i>User Profile</h5>
+          </div>
+          <div class="card-body text-center">
+            <img src="<%= user.profilePicUrl || '/images/default-profile.png' %>" alt="Profile" class="profile-img mb-3">
+            <h3 class="username"><%= user.username %></h3>
+            <% if (user.interests) { %>
+              <span class="interests"><i class="fas fa-heart me-1"></i><%= user.interests %></span>
+            <% } %>
+          </div>
+        </div>
+        
+        <!-- Categories Card -->
+        <div class="card">
+          <div class="card-header">
+            <h5><i class="fas fa-list-alt me-2"></i>Quiz Categories</h5>
+          </div>
+          <div class="card-body p-0">
+            <div class="list-group list-group-flush">
+              <% categories.forEach(category => { %>
+                <a href="/quiz/<%= category.toLowerCase() %>" class="list-group-item list-group-item-action d-flex align-items-center">
+                  <i class="fas fa-question-circle me-3 text-primary"></i>
+                  <span><%= category %></span>
+                  <i class="fas fa-chevron-right ms-auto text-muted"></i>
+                </a>
+              <% }) %>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Right Column -->
+      <div class="col-lg-8">
+        <!-- Results Card -->
+        <div class="card">
+          <div class="card-header">
+            <h5><i class="fas fa-chart-bar me-2"></i>Your Quiz Results</h5>
+          </div>
+          <div class="card-body">
+            <% if (typeof error !== 'undefined' && error) { %>
+              <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="fas fa-exclamation-circle me-2"></i><%= error %>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+            <% } %>
+            
+            <% if (results && results.length > 0) { %>
+              <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                  <thead>
+                    <tr>
+                      <th>Category</th>
+                      <th>Score</th>
+                      <th>Date</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% results.forEach(result => { %>
+                      <tr>
+                        <td>
+                          <span class="badge bg-primary text-capitalize">
+                            <%= result.category.toLowerCase() %>
+                          </span>
+                        </td>
+                        <td>
+                          <div class="d-flex align-items-center">
+                            <div class="progress flex-grow-1" style="height: 20px;">
+                              <div class="progress-bar 
+                                <% if ((result.score/result.totalQuestions) >= 0.7) { %>bg-success
+                                <% } else if ((result.score/result.totalQuestions) >= 0.4) { %>bg-warning
+                                <% } else { %>bg-danger<% } %>" 
+                                style="width: <%= (result.score/result.totalQuestions*100) %>%;">
+                              </div>
+                            </div>
+                            <small class="ms-2 fw-bold">
+                              <%= result.score %>/<%= result.totalQuestions %>
+                            </small>
+                          </div>
+                        </td>
+                        <td>
+                          <%= new Date(result.createdAt).toLocaleDateString('en-US', { 
+                            year: 'numeric', 
+                            month: 'short', 
+                            day: 'numeric' 
+                          }) %>
+                        </td>
+                      </tr>
+                    <% }) %>
+                  </tbody>
+                </table>
+              </div>
+            <% } else { %>
+              <div class="no-results">
+                <i class="far fa-folder-open"></i>
+                <h4>No Quiz Results Yet</h4>
+                <p class="text-muted">You haven't taken any quizzes yet. Start by selecting a category!</p>
+                <a href="/quiz" class="btn btn-primary mt-3">
+                  <i class="fas fa-play me-2"></i>Take a Quiz
+                </a>
+              </div>
+            <% } %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Font Awesome for icons -->
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
